@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       service:
-        description: 'Service to deploy (frontend, backend, maga, ai, transcription)'
+        description: 'Service to deploy (fe, be, maga, ai, transcription)'
         required: true
         type: 'string'
       environment:
