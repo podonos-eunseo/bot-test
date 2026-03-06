@@ -38,7 +38,6 @@ jobs:
         uses: 'actions/checkout@v4'
         with:
           ref: '${{ inputs.sha || github.sha }}'
-          token: '${{ steps.app-token.outputs.token }}'
       - name: 'Create and push tag'
         env:
           SERVICE: '${{ inputs.service }}'
@@ -46,4 +45,9 @@ jobs:
           VERSION: '${{ inputs.version }}'
           REQUESTED_BY: '${{ inputs.requested_by }}'
           GH_TOKEN: '${{ steps.app-token.outputs.token }}'
-        run: "TAG_NAME=\"podonos-apple-${SERVICE}-${ENVIRONMENT}-${VERSION}\"\ngit config user.name \"deploy-bot\"\ngit config user.email \"deploy-bot@noreply.github.com\"\ngit tag -a \"$TAG_NAME\" -m \"Deploy ${SERVICE} to ${ENVIRONMENT} by ${REQUESTED_BY}\"\ngit push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} \"$TAG_NAME\"\n"
+        run: |
+          TAG_NAME="podonos-apple-${SERVICE}-${ENVIRONMENT}-${VERSION}"
+          git config user.name "deploy-bot"
+          git config user.email "deploy-bot@noreply.github.com"
+          git tag -a "$TAG_NAME" -m "Deploy ${SERVICE} to ${ENVIRONMENT} by ${REQUESTED_BY}"
+          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} "$TAG_NAME"
