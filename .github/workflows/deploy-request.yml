@@ -38,6 +38,7 @@ jobs:
         uses: 'actions/checkout@v4'
         with:
           ref: '${{ inputs.sha || github.sha }}'
+          token: '${{ steps.app-token.outputs.token }}'
       - name: 'Create and push tag'
         env:
           SERVICE: '${{ inputs.service }}'
