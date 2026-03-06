@@ -2,7 +2,8 @@ name: 'Frontend Dev Deploy (Test)'
 on:
   push:
     tags:
-      - 'podonos-apple-fe-dev-*'
+      - "podonos-apple-fe-dev-v*"
+
 jobs:
   deploy-test:
     runs-on: 'ubuntu-latest'
