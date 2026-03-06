@@ -1,0 +1,41 @@
+name: 'Deploy Request'
+on:
+  workflow_dispatch:
+    inputs:
+      service:
+        description: 'Service to deploy (frontend, backend, maga, ai, transcription)'
+        required: true
+        type: 'string'
+      environment:
+        description: 'Environment to deploy (dev, stag, prod)'
+        required: true
+        type: 'string'
+      version:
+        description: 'Version tag (e.g. v0.0.1)'
+        required: true
+        type: 'string'
+      sha:
+        description: 'Commit SHA to deploy'
+        required: false
+        type: 'string'
+      requested_by:
+        description: 'Requested by'
+        required: true
+        type: 'string'
+jobs:
+  create-tag-and-deploy:
+    runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'write'
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v4'
+        with:
+          ref: '${{ inputs.sha || github.sha }}'
+      - name: 'Create and push tag'
+        env:
+          SERVICE: '${{ inputs.service }}'
+          ENVIRONMENT: '${{ inputs.environment }}'
+          VERSION: '${{ inputs.version }}'
+          REQUESTED_BY: '${{ inputs.requested_by }}'
+        run: "TAG_NAME=\"podonos-apple-${SERVICE}-${ENVIRONMENT}-${VERSION}\"\ngit config user.name \"deploy-bot\"\ngit config user.email \"deploy-bot@noreply.github.com\"\ngit tag -a \"$TAG_NAME\" -m \"Deploy ${SERVICE} to ${ENVIRONMENT} by ${REQUESTED_BY}\"\ngit push origin \"$TAG_NAME\"\n"
